@@ -92,6 +92,7 @@
 </head>
 
 <body>
+
 <header>
   AM Pancakes
   <nav style="margin-top:10px;">
@@ -136,7 +137,7 @@
     </div>
 
     <label>Total Price</label>
-    <input type="text" id="total" readonly />
+    <input type="number" id="total" readonly />
 
     <button type="submit">Submit Order</button>
   </form>
@@ -153,22 +154,26 @@
 </div>
 
 <script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbzRyAeQJuv4Svk4XOCqGAUM1pR0vryj_YAS-Dgc6QkVhuuzLxINOeHRUTva2K5cosPO/exec";
+  const scriptURL =
+    "https://script.google.com/macros/s/AKfycbzRyAeQJuv4Svk4XOCqGAUM1pR0vryj_YAS-Dgc6QkVhuuzLxINOeHRUTva2K5cosPO/exec";
 
   const price = 100;
 
+  // Calculate total
   document.getElementById("quantity").addEventListener("input", updateTotal);
   function updateTotal() {
     const qty = document.getElementById("quantity").value;
-    document.getElementById("total").value = qty * price + " pesos";
+    document.getElementById("total").value = qty * price;
   }
   updateTotal();
 
+  // Show GCash instructions
   document.getElementById("payment").addEventListener("change", function () {
     document.getElementById("gcash-info").style.display =
       this.value === "Gcash" ? "block" : "none";
   });
 
+  // Submit order
   document.getElementById("orderForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -182,15 +187,19 @@
 
     fetch(scriptURL, {
       method: "POST",
-      mode: "cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     })
-    .then(() => {
-      document.getElementById("order-section").style.display = "none";
-      document.getElementById("thankyou").style.display = "block";
-    })
-    .catch(err => alert("Error submitting form"));
+      .then((res) => res.text())
+      .then((response) => {
+        if (response === "success") {
+          document.getElementById("order-section").style.display = "none";
+          document.getElementById("thankyou").style.display = "block";
+        } else {
+          alert("Error: " + response);
+        }
+      })
+      .catch((err) => alert("Error submitting form"));
   });
 </script>
 
