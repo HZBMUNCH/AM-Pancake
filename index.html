@@ -131,13 +131,14 @@
       <option value="Gcash">GCash</option>
     </select>
 
-    <div id="gcash-info" style="display:none; margin-top:15px; background:#fff3cd; padding:10px; border-radius:5px;">
+    <div id="gcash-info"
+         style="display:none; margin-top:15px; background:#fff3cd; padding:10px; border-radius:5px;">
       <p><strong>GCash Number:</strong> 09098279381</p>
       <a href="https://www.facebook.com/anyanggggg319" target="_blank">Send Proof of Payment</a>
     </div>
 
     <label>Total Price</label>
-    <input type="number" id="total" readonly />
+    <input type="text" id="total" readonly />
 
     <button type="submit">Submit Order</button>
   </form>
@@ -159,21 +160,19 @@
 
   const price = 100;
 
-  // Calculate total
-  document.getElementById("quantity").addEventListener("input", updateTotal);
   function updateTotal() {
     const qty = document.getElementById("quantity").value;
-    document.getElementById("total").value = qty * price;
+    document.getElementById("total").value = qty * price + " pesos";
   }
+
+  document.getElementById("quantity").addEventListener("input", updateTotal);
   updateTotal();
 
-  // Show GCash instructions
   document.getElementById("payment").addEventListener("change", function () {
     document.getElementById("gcash-info").style.display =
       this.value === "Gcash" ? "block" : "none";
   });
 
-  // Submit order
   document.getElementById("orderForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -199,7 +198,7 @@
           alert("Error: " + response);
         }
       })
-      .catch((err) => alert("Error submitting form"));
+      .catch(() => alert("Error submitting form"));
   });
 </script>
 
